@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AFRIK DOMINATIONS - Login</title>
+  <link rel="stylesheet" href="login.css" />
+  <script src="login.js" defer></script>
+  
+</head>
+<body>
+  <form action="login.php" nethod="Post">
+  <div class="login-container">
+    <h2>Welcome to Afrik Business</h2>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <input type="text" id="email" placeholder=" " required />
+        <label for="email">Email</label>
+        <div class="validation-message" id="emailError">
+          Oops! That email doesn't look right
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="password" id="password" placeholder=" " required />
+        <label for="password">Password</label>
+        <div class="validation-message" id="passwordError">
+          Password must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="forgot-password">
+        <a href="#">Forgot Password?</a>
+      </div>
+
+      <button type="submit"><a href="Afrik.html">  Sign In</a> </button>
+    </form>
+
+    <div class="register-link">
+      First time here? <a href="sign up.html">Create Account</a>
+    </div>
+
+    <div class="success-container" id="success">
+      <h3>Woohoo! Login successful</h3>
+      <p><a href="Afrik.html" style="color: #00ff99;">Go to Home</a></p>
+    </div>
+  </div>
+  </form>
+</body>
+</html>

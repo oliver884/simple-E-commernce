@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | Afrik Furniture</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .status-timeline {
+            margin-top: 30px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .status-step {
+            position: relative;
+            padding-bottom: 30px;
+            border-left: 2px solid #2a9d8f;
+            padding-left: 25px;
+        }
+        
+        .status-step:last-child {
+            border-left: 2px solid transparent;
+        }
+        
+        .status-step .step-marker {
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #2a9d8f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .status-step.completed .step-marker {
+            background-color: #2a9d8f;
+        }
+        
+        .status-step.current .step-marker {
+            background-color: #e63946;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-step.pending .step-marker {
+            background-color: #ddd;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .step-date {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            color: #555;
+            font-size: 14px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .tracking-section {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .tracking-id {
+            font-family: monospace;
+            background-color: #eee;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .confirmation-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .confirmation-icon {
+            color: #2a9d8f;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #2a9d8f;
+        }
+        
+        .order-number {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .order-number strong {
+            color: #333;
+        }
+        
+        .confirmation-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            text-align: left;
+            flex-wrap: wrap;
+        }
+        
+        .order-section {
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+        
+        .order-section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e63946;
+            color: #333;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            width: 150px;
+            color: #555;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        .order-items {
+            margin-top: 20px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-name {
+            color: #555;
+        }
+        
+        .item-price {
+            font-weight: 600;
+        }
+        
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #e63946;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-top: 30px;
+        }
+        
+        .btn:hover {
+            background-color: #d90429;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #333;
+            margin-left: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #111;
+        }
+        
+        .delivery-note {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .delivery-note h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .whatsapp-contact {
+            margin-top: 40px;
+            display: inline-flex;
+            align-items: center;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .whatsapp-contact i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .payment-method {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .payment-method-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #ddd;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .order-details {
+                flex-direction: column;
+            }
+            
+            .order-section {
+                margin-bottom: 30px;
+                padding: 0;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="logo1.png" alt="Afrik Furniture Logo">
+            </div>
+            <div class="secure-checkout">
+                <i class="fas fa-lock"></i> Order Confirmation
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="confirmation-container">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+            </div>
+            <h1>Thank You For Your Order!</h1>
+            <p class="order-number">Your order number is: <strong id="orderId">#AFK-2023-5874</strong></p>
+            <p class="confirmation-message">
+                We've received your order and are processing it now. You'll receive a confirmation email shortly with all the details. 
+                Our team will contact you if we need any additional information.
+            </p>
+            
+            <div class="btn-group">
+                <a href="shop.html" class="btn">Continue Shopping</a>
+                <a href="track.html" class="btn btn-secondary" id="trackOrderBtn">Track Your Order</a>
+            </div>
+            
+            <a href="https://wa.me/233244123456" class="whatsapp-contact">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i> Chat with us on WhatsApp
+            </a>
+        </div>
+        
+        <div class="order-details" id="orderDetails">
+            <!-- Order details will be populated by JavaScript -->
+        </div>
+        
+        <div class="tracking-section" id="trackingInfo" style="display: none;">
+            <h2>Order Tracking</h2>
+            <p>You can track your order status anytime using this link:</p>
+            <a href="track.html" id="trackingLink" style="word-break: break-all;"></a>
+            <p>Or use your tracking ID:</p>
+            <div class="tracking-id" id="trackingIdDisplay"></div>
+            
+            <div class="status-timeline" id="statusTimeline">
+                <!-- Status timeline will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Afrik Furniture</h3>
+                <p>Quality furniture for your home and office at affordable prices.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="shop.html">Shop</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="track-order.html">Track Order</a>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 69 Spintex Road, Accra</p>
+                <p><i class="fas fa-phone"></i> 0302-804-009</p>
+                <p><i class="fas fa-envelope"></i> info@afrik.com.gh</p>
+            </div>
+        </div>
+        
+        <div class="container copyright">
+            <p>&copy; 2023 Afrik Furniture. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the order data from localStorage
+            let order = JSON.parse(localStorage.getItem('currentOrder'));
+            
+            // If no order data, check URL parameters
+            if (!order) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get('order');
+                const customerEmail = urlParams.get('email');
+                
+                if (orderId && customerEmail) {
+                    // Try to find the order in the orders history
+                    const orders = JSON.parse(localStorage.getItem('orders')) || {};
+                    const customerOrders = orders[customerEmail] || [];
+                    order = customerOrders.find(o => o.orderId === orderId);
+                }
+            }
+            
+            // If still no order data, redirect to shop
+            if (!order) {
+                window.location.href = 'shop.html';
+                return;
+            }
+            
+            // Save the order properly
+            localStorage.setItem('currentOrder', JSON.stringify(order));
+            
+            // Add to orders history
+            const orders = JSON.parse(localStorage.getItem('orders')) || {};
+            if (!orders[order.customer.email]) {
+                orders[order.customer.email] = [];
+            }
+            
+            // Check if this order already exists
+            const existingIndex = orders[order.customer.email].findIndex(o => o.orderId === order.orderId);
+            if (existingIndex >= 0) {
+                orders[order.customer.email][existingIndex] = order;
+            } else {
+                orders[order.customer.email].push(order);
+            }
+            
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Set the order number
+            document.getElementById('orderId').textContent = `#${order.orderId}`;
+            
+            // Update the track order button
+            const trackButton = document.getElementById('trackOrderBtn');
+            if (trackButton) {
+                trackButton.href = `track.html?order=${order.orderId}&email=${encodeURIComponent(order.customer.email)}`;
+            }
+            
+            // Format the date
+            const orderDate = new Date(order.date);
+            const formattedDate = orderDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Create payment method display
+            let paymentMethodDisplay = '';
+            if (order.payment.method === 'mobileMoney') {
+                paymentMethodDisplay = `
+                    <div class="payment-method">
+                        <div style="display: flex; align-items: center;">
+                            <img src="momo-logo.png" alt="Mobile Money" class="payment-method-icon">
+                            <span>${order.payment.details.network} Mobile Money</span>
+                        </div>
+                        <p style="margin-top: 10px;">Payment Number: ${order.payment.details.number}</p>
+                    </div>
+                `;
+            } else if (order.payment.method === 'card') {
+                paymentMethodDisplay = `
+                    <div class="payment-method">
+                        <div style="display: flex; align-items: center;">
+                            <img src="card-logo.png" alt="Credit Card" class="payment-method-icon">
+                            <span>Credit/Debit Card</span>
+                        </div>
+                        <p style="margin-top: 10px;">Card ending in: ${order.payment.details.cardLast4}</p>
+                    </div>
+                `;
+            } else if (order.payment.method === 'bankTransfer') {
+                paymentMethodDisplay = `
+                    <div class="payment-method">
+                        <div style="display: flex; align-items: center;">
+                            <img src="bank-logo.png" alt="Bank Transfer" class="payment-method-icon">
+                            <span>Bank Transfer</span>
+                        </div>
+                        <p style="margin-top: 10px;">Payment confirmation sent to payments@afrik.com.gh</p>
+                    </div>
+                `;
+            }
+            
+            // Create order items HTML
+            let orderItemsHTML = '';
+            order.items.forEach(item => {
+                orderItemsHTML += `
+                    <div class="order-item">
+                        <span class="item-name">${item.name} × ${item.quantity}</span>
+                        <span class="item-price">GH₵ ${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            // Add delivery fee
+            orderItemsHTML += `
+                <div class="order-item">
+                    <span class="item-name">Delivery Fee</span>
+                    <span class="item-price">GH₵ ${order.delivery.fee.toFixed(2)}</span>
+                </div>
+            `;
+            
+            // Create status timeline HTML
+            let statusTimelineHTML = '';
+            const statusSteps = [
+                { 
+                    id: 'order_placed',
+                    title: 'Order Placed', 
+                    description: 'We have received your order',
+                    date: order.date
+                },
+                { 
+                    id: 'payment_received',
+                    title: 'Payment Received', 
+                    description: 'Your payment has been processed',
+                    date: order.payment.transactionDate || order.date
+                },
+                { 
+                    id: 'processing',
+                    title: 'Processing', 
+                    description: 'We are preparing your order',
+                    date: new Date(new Date(order.date).getTime() + 60*60*1000).toISOString()
+                },
+                { 
+                    id: 'shipped',
+                    title: 'Shipped', 
+                    description: 'Your order is on its way',
+                    date: order.delivery.estimatedDelivery ? 
+                        new Date(new Date(order.delivery.estimatedDelivery).getTime() - 24*60*60*1000).toISOString() :
+                        new Date(new Date(order.date).getTime() + 24*60*60*1000).toISOString()
+                },
+                { 
+                    id: 'delivered',
+                    title: 'Delivered', 
+                    description: 'Your order has been delivered',
+                    date: order.delivery.estimatedDelivery || 
+                        new Date(new Date(order.date).getTime() + 3*24*60*60*1000).toISOString()
+                }
+            ];
+            
+            // Use actual status history if available
+            const timelineSteps = order.statusHistory ? 
+                statusSteps.map(step => {
+                    const historyItem = order.statusHistory.find(h => h.status === step.id);
+                    return historyItem || step;
+                }) : 
+                statusSteps;
+            
+            timelineSteps.forEach((step, index) => {
+                const stepDate = new Date(step.date);
+                const formattedStepDate = stepDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const isCompleted = index < timelineSteps.findIndex(s => s.id === order.delivery.status) || 
+                                  (index === 0 && order.delivery.status === 'pending');
+                const isCurrent = !isCompleted && 
+                                 (step.id === order.delivery.status || 
+                                 (index === 1 && order.payment.status === 'completed'));
+                
+                statusTimelineHTML += `
+                    <div class="status-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : 'pending'}">
+                        <div class="step-marker">
+                            ${isCompleted ? '✓' : index + 1}
+                        </div>
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-date">${formattedStepDate}</div>
+                        <div class="step-description">${step.description}</div>
+                    </div>
+                `;
+            });
+            
+            // Populate the order details
+            document.getElementById('orderDetails').innerHTML = `
+                <div class="order-section">
+                    <h2>Order Summary</h2>
+                    <div class="order-items">
+                        ${orderItemsHTML}
+                    </div>
+                    
+                    <div class="order-total">
+                        <span>Total:</span>
+                        <span>GH₵ ${order.total.toFixed(2)}</span>
+                    </div>
+                    
+                    <div class="delivery-note">
+                        <h3>Delivery Note</h3>
+                        <p>${order.delivery.notes || 'Please have someone available to receive the items at the delivery address.'}</p>
+                    </div>
+                </div>
+                
+                <div class="order-section">
+                    <h2>Customer Information</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">${order.customer.name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${order.customer.email}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">${order.customer.phone}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Method:</span>
+                        <span class="detail-value">
+                            ${paymentMethodDisplay}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="order-section">
+                    <h2>Delivery Address</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${order.customer.address}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">${order.customer.city}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">${order.customer.region}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Order Date:</span>
+                        <span class="detail-value">${formattedDate}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Delivery Date:</span>
+                        <span class="detail-value">${getDeliveryDate(orderDate)} (Estimated)</span>
+                    </div>
+                </div>
+            `;
+            
+            // Show tracking information
+            document.getElementById('trackingInfo').style.display = 'block';
+            document.getElementById('trackingLink').textContent = 
+                `${window.location.origin}/track.html?order=${order.orderId}&email=${encodeURIComponent(order.customer.email)}`;
+            document.getElementById('trackingLink').href = 
+                `track.html?order=${order.orderId}&email=${encodeURIComponent(order.customer.email)}`;
+            document.getElementById('trackingIdDisplay').textContent = order.orderId;
+            document.getElementById('statusTimeline').innerHTML = statusTimelineHTML;
+            
+            function getDeliveryDate(orderDate) {
+                // Add 3-5 business days for delivery estimate
+                const deliveryDate = new Date(orderDate);
+                const daysToAdd = 3 + Math.floor(Math.random() * 3); // Random between 3-5 days
+                deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+                
+                return deliveryDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
